@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom'
-import { useDB, canAccess, loginAdmin, logoutAdmin, saveCourse, deleteCourse, completeLesson, issueCert, submitExam, setName, markUnlocked, resetDemo, newId } from './store.js'
+import { useDB, canAccess, loginAdmin, logoutAdmin, saveCourse, deleteCourse, completeLesson, issueCert, submitExam, setName, markUnlocked, resetDemo, newId, ADMIN } from './store.js'
 import { askAI } from './ai.js'
 import { redeem, adminCall, adminReq, getCreds, setCreds } from './codes.js'
 import { P, G, Icon, CourseImg, CourseCard, chipOf, slugOf, usePage } from './ui.jsx'
@@ -317,7 +317,7 @@ function AdminLogin() {
         <label className="mt-4 block text-sm font-semibold">Password<input required type="password" autoComplete="current-password" className="field" value={f.pw} onChange={e => setF({ ...f, pw: e.target.value })} /></label>
         {err && <p className="mt-3 font-semibold text-rose" role="alert">{err}</p>}
         <button className={`${P} mt-6 w-full`} disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
-        {import.meta.env.DEV && <p className="mt-6 rounded-xl bg-soft p-4 text-sm text-muted">Local development: run <code>npx netlify dev</code> with ADMIN_EMAIL and ADMIN_PASSWORD set in your .env file.</p>}
+        {ADMIN.isDefault && <div className="mt-6 rounded-xl bg-soft p-4 text-sm"><p className="font-semibold">Sample credentials (demo)</p><p className="mt-1 text-muted">Email: <code>{ADMIN.email}</code><br />Password: <code>{ADMIN.pass}</code></p><p className="mt-2 text-muted">Set your own in the <code>.env</code> file before publishing. This box disappears once you do.</p></div>}
       </form>
     </div>
   )
@@ -536,7 +536,7 @@ export function AITutor() {
   return (
     <>
       {open && (
-        <div role="dialog" aria-label="STCA AI Tutor" className="no-print card fixed bottom-[8.75rem] right-5 z-50 flex h-[30rem] max-h-[calc(100dvh-10rem)] w-[min(23rem,calc(100vw-2.5rem))] flex-col overflow-hidden !rounded-3xl shadow-2xl">
+        <div role="dialog" aria-label="STCA AI Tutor" className="no-print card fixed bottom-24 right-5 z-50 flex h-[30rem] max-h-[calc(100vh-8rem)] w-[min(23rem,calc(100vw-2.5rem))] flex-col overflow-hidden !rounded-3xl shadow-2xl">
           <div className="flex items-center justify-between bg-deep px-5 py-4 text-white"><span className="flex items-center gap-2.5"><img src="/Images/logo-mark.svg" alt="" className="h-7 w-7" /><span><span className="block font-semibold leading-tight">STCA AI Tutor</span><span className="block text-[11px] text-white/60">Courses, prices and study help</span></span></span><button aria-label="Close tutor" onClick={() => setOpen(false)}><Icon n="close" /></button></div>
           <div className="flex-1 space-y-3 overflow-y-auto p-4" aria-live="polite">
             {msgs.map((m, i) => <div key={i} className={`max-w-[88%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${m.role === 'user' ? 'ml-auto whitespace-pre-wrap bg-brand text-onbrand' : 'bg-soft'}`}>{m.role === 'user' ? m.content : <Md text={m.content} />}</div>)}
