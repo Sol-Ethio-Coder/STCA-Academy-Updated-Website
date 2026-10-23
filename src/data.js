@@ -71,7 +71,7 @@ const base = [
     perks: [['Essential', 'Learn practical computer skills.'], ['Practical', 'Hands-on applications & exercises.'], ['Flexible', 'Learn at your own pace.']],
     tag: 'Digital skills for everyone.', meta: 'Computer and internet basics tutoring for beginners of any age at STCA. 500 Birr/hour.' }, [
     L('Parts of a computer', 'Input devices like the keyboard send data in. Output devices like the screen show results.', 'Which is an input device?', ['Monitor', 'Speaker', 'Printer', 'Keyboard'], 3),
-    L('Staying safe online', 'Use long, unique passwords and never share them. Think before you click a link.', 'A strong password is…', ['Your name', 'Long and unique', '12345678', 'The same everywhere'], 1),
+    L('Staying safe online', 'Use long, unique passwords and never share them. Think before you click a link.', 'A strong password is…', ['Your name', 'Long and unique', 'Your birthday', 'The same everywhere'], 1),
   ]),
   mk({ id: 'exam', slug: 'exam-course', cat: 'School', level: 'Grade 6, 8, 12', title: 'Exam Preparation', h1: '📚 Exam Preparation', pageTitle: 'National Exam Preparation | STCA',
     img: IMG.exam, listImg: IMG.exam, detailImg: IMG.exam, fallback: '/Images/final-exam.svg',

@@ -5,3 +5,5 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # ADMIN_EMAIL is only a login name (and may equal the public contact email shown on the site), so do not scan for it.
+  SECRETS_SCAN_OMIT_KEYS = "ADMIN_EMAIL,TELEGRAM_CHAT_ID"

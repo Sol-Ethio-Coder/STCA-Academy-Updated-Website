@@ -10,7 +10,7 @@ Copy everything from your repo's `Images/` folder into `public/Images/` (ict.avi
 Free and paid self-paced courses with quizzes and certificates. There are NO student accounts: progress is saved in the visitor's browser and the certificate asks for a name. Paid courses unlock with an access code you create in the admin panel and send after payment.
 
 ## Admin (`/admin`, owner only)
-Sample login: `admin@stca.local` / `change-me-now` (shown on the login page until you set your own in `.env`). Create, edit, publish and delete courses; draft lessons with AI.
+Sign in with the ADMIN_EMAIL and ADMIN_PASSWORD you set in Netlify (see DEPLOY.md). Create, edit, publish and delete courses; draft lessons with AI.
 
 ## Run
 1. `npm install`   2. copy `.env.example` to `.env`   3. `npx netlify dev` (or `npm run dev` without AI)

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom'
-import { useDB, canAccess, loginAdmin, logoutAdmin, saveCourse, deleteCourse, completeLesson, issueCert, submitExam, setName, markUnlocked, resetDemo, newId, ADMIN } from './store.js'
+import { useDB, canAccess, loginAdmin, logoutAdmin, saveCourse, deleteCourse, completeLesson, issueCert, submitExam, setName, markUnlocked, resetDemo, newId } from './store.js'
 import { askAI } from './ai.js'
 import { redeem, adminCall, adminReq, getCreds, setCreds } from './codes.js'
 import { P, G, Icon, CourseImg, CourseCard, chipOf, slugOf, usePage } from './ui.jsx'
@@ -317,7 +317,7 @@ function AdminLogin() {
         <label className="mt-4 block text-sm font-semibold">Password<input required type="password" autoComplete="current-password" className="field" value={f.pw} onChange={e => setF({ ...f, pw: e.target.value })} /></label>
         {err && <p className="mt-3 font-semibold text-rose" role="alert">{err}</p>}
         <button className={`${P} mt-6 w-full`} disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
-        {ADMIN.isDefault && <div className="mt-6 rounded-xl bg-soft p-4 text-sm"><p className="font-semibold">Sample credentials (demo)</p><p className="mt-1 text-muted">Email: <code>{ADMIN.email}</code><br />Password: <code>{ADMIN.pass}</code></p><p className="mt-2 text-muted">Set your own in the <code>.env</code> file before publishing. This box disappears once you do.</p></div>}
+        {import.meta.env.DEV && <p className="mt-6 rounded-xl bg-soft p-4 text-sm text-muted">Local development: run <code>npx netlify dev</code> with ADMIN_EMAIL and ADMIN_PASSWORD set in your .env file.</p>}
       </form>
     </div>
   )

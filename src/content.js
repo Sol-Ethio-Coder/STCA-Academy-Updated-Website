@@ -706,7 +706,7 @@ Use **Cc** to copy people who should know, and be careful with **Reply all**. Ne
 - turn on **two-step verification** when you can
 - be careful of **phishing**: messages that pretend to be a bank or a friend to steal your information
 - check that a site address starts with **https**`, [
-        mc('A strong password is…', ['Your name', 'Long and unique', '12345678', 'The same everywhere'], 1), tf('It is safe to share your password with friends.', false),
+        mc('A strong password is…', ['Your name', 'Long and unique', 'Your birthday', 'The same everywhere'], 1), tf('It is safe to share your password with friends.', false),
         mc('What is phishing?', ['A fake message that tries to steal your information', 'A fast internet connection', 'A type of password', 'A computer virus update'], 0)]),
       L('Searching and judging sources', `Anyone can publish anything online, so check before you believe it.
 

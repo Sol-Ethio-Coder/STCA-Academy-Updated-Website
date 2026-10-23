@@ -3,7 +3,9 @@ import { seedCourses, PASS } from './data.js'
 import { serverLogin, setCreds } from './codes.js'
 
 const KEY = 'stca-db-v5'
-export const ADMIN = { email: import.meta.env.VITE_ADMIN_EMAIL || 'admin@stca.local', pass: import.meta.env.VITE_ADMIN_PASSWORD || 'change-me-now', isDefault: !import.meta.env.VITE_ADMIN_PASSWORD }
+// Local-development fallback only. There are NO built-in credentials: set VITE_ADMIN_EMAIL / VITE_ADMIN_PASSWORD in a local .env if you want it.
+// (read only in development, so these variables can never be copied into the public website code)
+const DEV_ADMIN = import.meta.env.DEV ? { email: import.meta.env.VITE_ADMIN_EMAIL || '', pass: import.meta.env.VITE_ADMIN_PASSWORD || '' } : { email: '', pass: '' }
 const subs = new Set()
 const fresh = () => ({ courses: seedCourses, progress: {}, unlocked: [], name: '', admin: false })
 let db = (() => { try { const d = JSON.parse(localStorage.getItem(KEY)); if (d) return d } catch (e) {} return fresh() })()
@@ -13,10 +15,11 @@ export const newId = () => Math.random().toString(36).slice(2, 10)
 export const canAccess = (d, c) => c.price === 0 || d.admin || d.unlocked.includes(c.id)
 
 export async function loginAdmin(email, pw) {
-  // 1) Real check on the server (ADMIN_EMAIL / ADMIN_PASSWORD in Netlify). 2) Demo fallback only when the server is not set up.
-  try { await serverLogin(email, pw); setCreds(email, pw); commit({ ...db, admin: true }); return } catch (e) { if (e.status === 401) throw new Error('Wrong email or password') }
-  if (email.trim().toLowerCase() === ADMIN.email.toLowerCase() && pw === ADMIN.pass) { commit({ ...db, admin: true }); return }
-  throw new Error('Wrong email or password')
+  // The password is checked on the server (ADMIN_EMAIL / ADMIN_PASSWORD set in Netlify), never in the browser.
+  let last
+  try { await serverLogin(email, pw); setCreds(email, pw); commit({ ...db, admin: true }); return } catch (e) { if (e.status === 401) throw new Error('Wrong email or password'); last = e }
+  if (import.meta.env.DEV && DEV_ADMIN.email && DEV_ADMIN.pass && email.trim().toLowerCase() === DEV_ADMIN.email.toLowerCase() && pw === DEV_ADMIN.pass) { commit({ ...db, admin: true }); return }
+  throw new Error(last?.status === 503 ? 'Admin sign-in is not set up yet. Add ADMIN_EMAIL and ADMIN_PASSWORD in Netlify, then redeploy.' : 'Sign-in is not available right now. Please try again in a moment.')
 }
 export const logoutAdmin = () => commit({ ...db, admin: false })
 export const saveCourse = c => commit({ ...db, courses: db.courses.some(x => x.id === c.id) ? db.courses.map(x => (x.id === c.id ? c : x)) : [...db.courses, c] })

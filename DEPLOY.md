@@ -61,3 +61,12 @@ Do NOT add GROQ_MODEL (or leave it empty). Then Deploys > Trigger deploy > Clear
 - Admin or requests say "not configured": ADMIN_EMAIL / ADMIN_PASSWORD missing in Netlify; redeploy after adding.
 - Functions 404: the functions directory must be `netlify/functions`.
 - Build fails: run `npm run build` locally and read the first error.
+
+## Build fails with "secrets scanning" (Netlify)
+Netlify fails a build when the VALUE of an environment variable marked "Contains secret values" appears anywhere in your repo or built files, or when a file contains something that looks like a password or key.
+1. Open the failed deploy log and find the lines about secrets. They name the file and the variable.
+2. Make sure no `.env` file is in the repo: `git ls-files | grep -i "\.env"` (Windows: `git ls-files | findstr /i ".env"`). Only `.env.example` may be listed. If `.env` is listed: `git rm --cached .env`, commit, push, and then CHANGE the keys/passwords it contained (they were public on GitHub).
+3. Use a strong, random ADMIN_PASSWORD (a password-manager one, 16+ characters). A short or common word (for example one that also appears in lesson text) matches the site's own text and fails the scan.
+4. ADMIN_EMAIL is not a secret. Untick "Contains secret values" for it, or keep the `SECRETS_SCAN_OMIT_KEYS` line in `netlify.toml`.
+5. Never set an environment variable to a value that already appears in the code (like the public contact email or a demo word).
+6. Do not turn scanning off. If smart detection flags a harmless string, add it to a variable named `SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES` (comma separated) and redeploy.
