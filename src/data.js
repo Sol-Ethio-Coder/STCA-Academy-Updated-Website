@@ -92,6 +92,7 @@ const base = [
 
 export const seedCourses = base.map(c => ({ ...c, ...(extras[c.id] || {}) }))
 
+// Add REAL testimonials here ({ name, init, role, text }). The scrolling section picks them up automatically; with 6 or more it becomes two rows.
 export const reviews = [
   { name: 'Helen M.', init: 'HM', role: 'Parent — Scratch Programming', text: 'My son went from barely touching a keyboard to building his own Scratch games in two months. The tutors are patient and genuinely care.' },
   { name: 'Dawit T.', init: 'DT', role: 'Student — Python Programming', text: 'I joined the Python course with zero experience. Three months later I built a small automation script for my own business. Worth every Birr.' },

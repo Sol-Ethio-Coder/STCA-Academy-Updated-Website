@@ -156,21 +156,59 @@ function LearnBanner() {
   )
 }
 
-function Testimonials() {
+function ReviewCard({ r }) {
   return (
-    <Wrap className="py-16"><Head center eyebrow="What families are saying" title="Real students. Real progress." sub="A few words from students and parents we’ve worked with." />
-      <div className="reveal mt-12 grid gap-6 md:grid-cols-3">
-        {reviews.map(r => (
-          <figure key={r.name} className="card card-hover group flex flex-col p-7">
-            <Icon n="quote" className="h-8 w-8 text-accent/40 transition duration-300 group-hover:rotate-12 group-hover:scale-125 group-hover:text-accent" />
-            <p className="mt-3 text-yellow-500" aria-label="5 out of 5 stars">★★★★★</p>
-            <blockquote className="mt-3 flex-1 leading-relaxed">“{r.text}”</blockquote>
-            <figcaption className="mt-6 flex items-center gap-3 border-t border-hair pt-5"><span className="flex h-11 w-11 items-center justify-center rounded-full font-bold text-[#0b1226]" style={{ background: 'linear-gradient(135deg,#4ade80,#fbbf24)' }}>{r.init}</span><span className="font-semibold">{r.name}<span className="block text-sm font-normal text-muted">{r.role}</span></span></figcaption>
-          </figure>
+    <figure className="card card-hover group flex h-full flex-col p-7">
+      <Icon n="quote" className="h-8 w-8 text-accent/40 transition duration-300 group-hover:rotate-12 group-hover:scale-125 group-hover:text-accent" />
+      <p className="mt-3 text-yellow-500" aria-label="5 out of 5 stars">★★★★★</p>
+      <blockquote className="mt-3 flex-1 leading-relaxed">“{r.text}”</blockquote>
+      <figcaption className="mt-6 flex items-center gap-3 border-t border-hair pt-5"><span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-bold text-[#0b1226]" style={{ background: 'linear-gradient(135deg,#4ade80,#fbbf24)' }}>{r.init}</span><span className="font-semibold">{r.name}<span className="block text-sm font-normal text-muted">{r.role}</span></span></figcaption>
+    </figure>
+  )
+}
+const StatCard = () => (
+  <div className="card card-hover flex h-full flex-col justify-center p-7 text-center">
+    <p className="grad-text font-display text-6xl font-bold">50+</p>
+    <p className="mt-2 text-lg font-semibold">students taught</p>
+    <p className="mt-1 text-muted">1:1 lessons in Addis Ababa and online</p>
+  </div>
+)
+const JoinCard = () => (
+  <div className="flex h-full flex-col justify-center rounded-[1.25rem] bg-deep p-7 text-white">
+    <p className="eyebrow !text-[#fbbf24]">Your turn</p>
+    <p className="mt-2 font-display text-3xl leading-tight">Be our next success story</p>
+    <p className="mt-2 text-white/70">Start with a free 15-minute intro call.</p>
+    <Link to="/html/contact" className="btn mt-5 self-start bg-white !py-2.5 text-[#0b1226]">Book a Free Call <Icon n="arrow" className="h-4 w-4" /></Link>
+  </div>
+)
+// One scrolling row. Repeats the cards until the loop is wide enough for any screen, then scrolls by itself (pauses on hover).
+function ReviewRow({ cards, reverse }) {
+  const reps = Math.max(1, Math.ceil(3200 / (cards.length * 376)))
+  const base = Array.from({ length: reps }, () => cards).flat()
+  const items = [...base, ...base]
+  return (
+    <div className="marquee" role="group" aria-label="Student reviews">
+      <div className={`marquee-track ${reverse ? 'rev' : ''}`} style={{ animationDuration: `${Math.max(35, base.length * 9)}s` }}>
+        {items.map((c, i) => (
+          <div key={i} className="w-[22rem] max-w-[85vw] shrink-0" aria-hidden={i >= cards.length || undefined} inert={i >= cards.length ? '' : undefined}>
+            {c.stat ? <StatCard /> : c.join ? <JoinCard /> : <ReviewCard r={c.r} />}
+          </div>
         ))}
       </div>
-      <dl className="card mt-10 grid grid-cols-2 gap-6 p-8 text-center md:grid-cols-4"><Stat n={<CountUp to={50} suffix="+" />} l="Students taught" /><Stat n={<CountUp to={7} />} l="Courses offered" /><Stat n="< 3 hrs" l="Avg. reply time" /><Stat n="1:1" l="Personalized tutoring" /></dl>
-    </Wrap>
+    </div>
+  )
+}
+
+function Testimonials() {
+  // Every review in data.js appears here automatically. With 6 or more reviews the section becomes two rows moving in opposite directions.
+  const cards = reviews.flatMap((r, i) => [{ r }, ...(i === 1 ? [{ stat: true }] : [])]).concat([{ join: true }])
+  const rows = reviews.length >= 6 ? [cards.filter((_, i) => i % 2 === 0), cards.filter((_, i) => i % 2 === 1)] : [cards]
+  return (
+    <section className="py-16">
+      <Wrap><Head center eyebrow="What families are saying" title="Real students. Real progress." sub="A few words from students and parents we’ve worked with." /></Wrap>
+      <div className="mt-10">{rows.map((row, i) => <ReviewRow key={i} cards={row} reverse={i === 1} />)}</div>
+      <Wrap><dl className="card mt-4 grid grid-cols-2 gap-6 p-8 text-center md:grid-cols-4"><Stat n={<CountUp to={50} suffix="+" />} l="Students taught" /><Stat n={<CountUp to={7} />} l="Courses offered" /><Stat n="< 3 hrs" l="Avg. reply time" /><Stat n="1:1" l="Personalized tutoring" /></dl></Wrap>
+    </section>
   )
 }
 

@@ -103,3 +103,5 @@ footer li a:hover { transform: translateX(5px); color: #fff; }
 .glass.float:hover { border-color: var(--accent); box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--accent) 55%, transparent); }
 article img, .card img { transition: transform .7s cubic-bezier(.2,.7,.2,1), filter .4s; }
 .card:hover img { filter: saturate(1.15); }
+
+.marquee-track.rev { animation-direction: reverse; }
