@@ -536,7 +536,7 @@ export function AITutor() {
   return (
     <>
       {open && (
-        <div role="dialog" aria-label="STCA AI Tutor" className="no-print card fixed bottom-[8.75rem] right-5 z-50 flex h-[30rem] max-h-[calc(100dvh-10rem)] w-[min(23rem,calc(100vw-2.5rem))] flex-col overflow-hidden !rounded-3xl shadow-2xl">
+        <div role="dialog" aria-label="STCA AI Tutor" className="no-print card fixed bottom-24 right-5 z-50 flex h-[30rem] max-h-[calc(100vh-8rem)] w-[min(23rem,calc(100vw-2.5rem))] flex-col overflow-hidden !rounded-3xl shadow-2xl">
           <div className="flex items-center justify-between bg-deep px-5 py-4 text-white"><span className="flex items-center gap-2.5"><img src="/Images/logo-mark.svg" alt="" className="h-7 w-7" /><span><span className="block font-semibold leading-tight">STCA AI Tutor</span><span className="block text-[11px] text-white/60">Courses, prices and study help</span></span></span><button aria-label="Close tutor" onClick={() => setOpen(false)}><Icon n="close" /></button></div>
           <div className="flex-1 space-y-3 overflow-y-auto p-4" aria-live="polite">
             {msgs.map((m, i) => <div key={i} className={`max-w-[88%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${m.role === 'user' ? 'ml-auto whitespace-pre-wrap bg-brand text-onbrand' : 'bg-soft'}`}>{m.role === 'user' ? m.content : <Md text={m.content} />}</div>)}

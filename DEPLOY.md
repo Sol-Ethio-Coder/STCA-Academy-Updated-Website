@@ -72,4 +72,4 @@ Netlify fails a build when the VALUE of an environment variable marked "Contains
 6. Do not turn scanning off. If smart detection flags a harmless string, add it to a variable named `SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES` (comma separated) and redeploy.
 
 ## The "Powered by Netlify" badge
-New free-plan sites created after 19 Aug 2026 show a small "Powered by Netlify" badge at the bottom-right. It is drawn by Netlify in its own frame, so the site's code cannot move or hide it. The floating Telegram and AI tutor buttons are placed above it so they never overlap. To remove the badge for everyone: Project configuration > General > Powered by Netlify badge > turn off. Visitors can also dismiss it themselves.
+Free-plan sites created after 19 Aug 2026 show a small badge at the bottom-right. It is drawn by Netlify in its own frame, so the site code cannot move it. It is turned off for this site (Project configuration > General > Powered by Netlify badge). If it is ever switched back on, it will cover the floating buttons: raise `bottom-5` in `src/App.jsx` and `bottom-24` in `src/pages.jsx` (the chat window) by about 3.5rem.
