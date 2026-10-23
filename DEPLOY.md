@@ -70,3 +70,6 @@ Netlify fails a build when the VALUE of an environment variable marked "Contains
 4. ADMIN_EMAIL is not a secret. Untick "Contains secret values" for it, or keep the `SECRETS_SCAN_OMIT_KEYS` line in `netlify.toml`.
 5. Never set an environment variable to a value that already appears in the code (like the public contact email or a demo word).
 6. Do not turn scanning off. If smart detection flags a harmless string, add it to a variable named `SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES` (comma separated) and redeploy.
+
+## The "Powered by Netlify" badge
+New free-plan sites created after 19 Aug 2026 show a small "Powered by Netlify" badge at the bottom-right. It is drawn by Netlify in its own frame, so the site's code cannot move or hide it. The floating Telegram and AI tutor buttons are placed above it so they never overlap. To remove the badge for everyone: Project configuration > General > Powered by Netlify badge > turn off. Visitors can also dismiss it themselves.

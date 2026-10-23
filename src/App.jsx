@@ -103,7 +103,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer tag={tag} />
-      <div className="no-print fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
+      <div className="no-print fixed bottom-[5rem] right-5 z-50 flex flex-col items-end gap-3">
         {top && <a href="#top" aria-label="Back to top" className="glass flex h-11 w-11 items-center justify-center rounded-full border border-hair-strong shadow-lg"><Icon n="arrow" className="h-5 w-5 -rotate-90" /></a>}
         <a href={TELEGRAM} target="_blank" rel="noopener" className="btn shadow-lg" style={{ background: '#22c55e', color: '#052e14' }}><Icon n="tg" className="h-4 w-4" />Chat on Telegram</a>
         <AITutor />
