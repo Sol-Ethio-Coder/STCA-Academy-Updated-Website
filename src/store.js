@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react'
-import { seedCourses, PASS } from './data.js'
+import { seedCourses, PASS, SEED_VERSION } from './data.js'
 import { serverLogin, setCreds } from './codes.js'
 
 const KEY = 'stca-db-v5'
@@ -7,8 +7,18 @@ const KEY = 'stca-db-v5'
 // (read only in development, so these variables can never be copied into the public website code)
 const DEV_ADMIN = import.meta.env.DEV ? { email: import.meta.env.VITE_ADMIN_EMAIL || '', pass: import.meta.env.VITE_ADMIN_PASSWORD || '' } : { email: '', pass: '' }
 const subs = new Set()
-const fresh = () => ({ courses: seedCourses, progress: {}, unlocked: [], name: '', admin: false })
-let db = (() => { try { const d = JSON.parse(localStorage.getItem(KEY)); if (d) return d } catch (e) {} return fresh() })()
+const fresh = () => ({ seedV: SEED_VERSION, courses: seedCourses, progress: {}, unlocked: [], name: '', admin: false })
+let db = (() => {
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY))
+    if (d) {
+      // New site version: refresh the built-in courses (new lessons, new courses) but keep progress, unlocked courses, name and any courses you created yourself.
+      if (d.seedV !== SEED_VERSION) { const ids = new Set(seedCourses.map(c => c.id)); d.courses = [...seedCourses, ...(d.courses || []).filter(c => !ids.has(c.id))]; d.seedV = SEED_VERSION }
+      return d
+    }
+  } catch (e) {}
+  return fresh()
+})()
 const commit = next => { db = next; try { localStorage.setItem(KEY, JSON.stringify(db)) } catch (e) {} subs.forEach(f => f()) }
 export const useDB = () => useSyncExternalStore(f => { subs.add(f); return () => subs.delete(f) }, () => db)
 export const newId = () => Math.random().toString(36).slice(2, 10)

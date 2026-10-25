@@ -3,7 +3,7 @@ import { PASS } from './data.js'
 export { PASS }
 
 const norm = s => String(s ?? '').trim().toLowerCase().replace(/\s+/g, '')
-export const isGraded = q => ['mcq', 'tf', 'fill', 'order', 'match', 'checklist', 'task', 'pytask', 'jstask'].includes(q.t)
+export const isGraded = q => ['mcq', 'tf', 'fill', 'order', 'match', 'checklist', 'task', 'pytask', 'jstask', 'ctask'].includes(q.t)
 export const actsOf = l => l.acts || (l.q?.q ? [{ t: 'mcq', ...l.q }] : [])
 export const examOf = c => (c.exam?.length ? c.exam : (c.lessons || []).flatMap(actsOf).filter(q => ['mcq', 'tf', 'fill'].includes(q.t)))
 export function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]] } return a }
@@ -122,10 +122,53 @@ export function Graph() {
   )
 }
 
+export function Binary() {
+  const [bits, setBits] = useState([0, 0, 0, 0, 1, 0, 1, 0])
+  const val = bits.reduce((t, b, i) => t + b * 2 ** (7 - i), 0)
+  return (
+    <Frame label="Explore · binary numbers">
+      <div className="flex flex-wrap justify-center gap-2">{bits.map((b, i) => (
+        <button key={i} aria-label={`Bit worth ${2 ** (7 - i)}`} aria-pressed={!!b} onClick={() => setBits(x => x.map((y, j) => (j === i ? 1 - y : y)))}
+          className={`flex w-12 flex-col items-center rounded-xl border-2 px-1 py-2 font-mono transition-all hover:-translate-y-0.5 ${b ? 'border-accent bg-accent/15' : 'border-hair-strong bg-surface'}`}>
+          <span className="text-xs text-muted">{2 ** (7 - i)}</span><span className="text-2xl font-bold">{b}</span></button>))}</div>
+      <p className="mt-4 text-center font-display text-3xl">{bits.join('')} = <span className="grad-text">{val}</span></p>
+      <p className="mt-1 text-center text-sm text-muted">Tap the bits, then add the place values of the 1s.{val >= 33 && val <= 126 ? ` In the ASCII text code, ${val} is the character "${String.fromCharCode(val)}".` : ''}</p>
+    </Frame>
+  )
+}
+
+const FIT_PTS = [[1, 3.4], [2, 4.8], [3, 7.3], [4, 8.6], [5, 11.2], [6, 12.9]]
+export function Fit() {
+  const [m, setM] = useState(0.5)
+  const [b, setB] = useState(0)
+  const err = FIT_PTS.reduce((t, [x, y]) => t + (m * x + b - y) ** 2, 0) / FIT_PTS.length
+  const X = x => 20 + x * 26, Y = v => 200 - v * 12
+  return (
+    <Frame label="Explore · teach the line">
+      <div className="grid items-center gap-5 sm:grid-cols-[15rem_1fr]">
+        <svg viewBox="0 0 240 220" className="w-full max-w-[15rem] rounded-xl border border-hair bg-surface" role="img" aria-label={`Data points and a line y = ${m}x + ${b}`}>
+          <line x1="20" y1="200" x2="232" y2="200" stroke="var(--muted)" /><line x1="20" y1="8" x2="20" y2="200" stroke="var(--muted)" />
+          {FIT_PTS.map(([x, y]) => <line key={'e' + x} x1={X(x)} y1={Y(y)} x2={X(x)} y2={Y(m * x + b)} stroke="var(--g3)" strokeDasharray="3 3" />)}
+          <line x1={X(0)} y1={Y(b)} x2={X(8)} y2={Y(8 * m + b)} stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" />
+          {FIT_PTS.map(([x, y]) => <circle key={x} cx={X(x)} cy={Y(y)} r="5" fill="var(--g2)" />)}
+        </svg>
+        <div className="space-y-4">
+          <p className="text-lg">Error (lower is better): <b className={`font-display text-3xl ${err < 0.5 ? 'text-leaf' : ''}`}>{err.toFixed(2)}</b></p>
+          <label className="block text-sm font-semibold">Slope m: {m.toFixed(1)}<input type="range" min="0" max="4" step="0.1" value={m} onChange={e => setM(Number(e.target.value))} className="mt-1 w-full" /></label>
+          <label className="block text-sm font-semibold">Intercept b: {b.toFixed(1)}<input type="range" min="-2" max="6" step="0.1" value={b} onChange={e => setB(Number(e.target.value))} className="mt-1 w-full" /></label>
+          <p className="text-sm font-semibold" role="status">{err < 0.5 ? 'Great fit! The model has learned the pattern. 🎉' : 'Keep adjusting. Dashed red lines show the error of each point.'}</p>
+        </div>
+      </div>
+    </Frame>
+  )
+}
+
 export function Explore({ a }) {
   if (a.t === 'play') return <Play html={a.html} />
   if (a.t === 'stage') return <Stage />
   if (a.t === 'graph') return <Graph />
+  if (a.t === 'fit') return <Fit />
+  if (a.t === 'binary') return <Binary />
   return null
 }
 
@@ -198,6 +241,7 @@ export function CodeTask({ a, onSolved }) {
     setBusy(true); setRes(null)
     try {
       if (kind === 'task') { setPrev(code); return { out: '' } }
+      if (kind === 'ctask') return { out: '' }
       const r = kind === 'pytask' ? await runPy(code) : await runJS(code)
       setOut(r.out); return r
     } catch (e) { setOut(e.message); return { out: '', err: e.message, fail: true } } finally { setBusy(false) }
@@ -225,18 +269,18 @@ export function CodeTask({ a, onSolved }) {
     setCode(code.slice(0, s) + '    ' + code.slice(t.selectionEnd))
     requestAnimationFrame(() => { t.selectionStart = t.selectionEnd = s + 4 })
   }
-  const label = kind === 'pytask' ? 'Python' : kind === 'jstask' ? 'JavaScript' : 'HTML · CSS · JS'
+  const label = kind === 'pytask' ? 'Python' : kind === 'jstask' ? 'JavaScript' : kind === 'ctask' ? 'C++ · checked for key parts, not compiled' : 'HTML · CSS · JS'
   return (
     <div className="rounded-2xl border border-hair bg-soft p-5">
       <p className="eyebrow">Coding task</p>
       <div className="mt-2"><Rich text={a.q} /></div>
       <div className="mt-4 overflow-hidden rounded-2xl border border-hair">
-        <div className="flex items-center justify-between bg-deep px-4 py-2 text-xs font-bold text-white"><span>{label}</span><button disabled={busy} onClick={run} className="rounded-full bg-white px-3 py-1 text-[#0b1226] disabled:opacity-60">{busy ? 'Running…' : 'Run ▶'}</button></div>
+        <div className="flex items-center justify-between bg-deep px-4 py-2 text-xs font-bold text-white"><span>{label}</span>{kind !== 'ctask' && <button disabled={busy} onClick={run} className="rounded-full bg-white px-3 py-1 text-[#0b1226] disabled:opacity-60">{busy ? 'Running…' : 'Run ▶'}</button>}</div>
         <div className={kind === 'task' ? 'grid md:grid-cols-2' : ''}>
           <textarea aria-label="Code editor" spellCheck="false" value={code} onChange={e => { setCode(e.target.value); setRes(null) }} onKeyDown={onKey} className="min-h-[12rem] w-full resize-y bg-[#0b1226] p-4 font-mono text-sm text-[#e6edf7] outline-none" />
           {kind === 'task' && <iframe title="Live preview" sandbox="allow-scripts" srcDoc={prev} className="min-h-[12rem] w-full bg-white" />}
         </div>
-        {kind !== 'task' && <pre aria-live="polite" className="min-h-[3.5rem] whitespace-pre-wrap bg-[#060b18] p-4 font-mono text-sm text-[#a7f3d0]">{busy && kind === 'pytask' && !out ? 'Loading Python… (the first run takes a few seconds)' : out || 'Output appears here…'}</pre>}
+        {(kind === 'pytask' || kind === 'jstask') && <pre aria-live="polite" className="min-h-[3.5rem] whitespace-pre-wrap bg-[#060b18] p-4 font-mono text-sm text-[#a7f3d0]">{busy && kind === 'pytask' && !out ? 'Loading Python… (the first run takes a few seconds)' : out || 'Output appears here…'}</pre>}
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <button className="btn btn-primary btn-sm" disabled={busy} onClick={check}>Check my work</button>
@@ -269,7 +313,7 @@ export function Checklist({ a, onSolved }) {
 }
 
 export function Act({ a, onSolved }) {
-  if (['task', 'pytask', 'jstask'].includes(a.t)) return <CodeTask a={a} onSolved={onSolved} />
+  if (['task', 'pytask', 'jstask', 'ctask'].includes(a.t)) return <CodeTask a={a} onSolved={onSolved} />
   if (a.t === 'checklist') return <Checklist a={a} onSolved={onSolved} />
   return <Activity q={a} onSolved={onSolved} />
 }

@@ -75,3 +75,8 @@ The chat is called **STCA AI Tutor**. The server prompt (`netlify/functions/ai.m
 2. Netlify: Site configuration > Build & deploy. Build command `npm run build`, publish directory `dist` (both are also set in `netlify.toml`).
 3. Environment variables: `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `GROQ_API_KEY` (and optionally `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`). Leave `GROQ_MODEL` empty.
 4. Deploys > Trigger deploy > Clear cache and deploy site.
+
+## New online courses (v4)
+C++ Fundamentals, Computer Science Fundamentals, AI Fundamentals and English Grammar Fundamentals (each 300 ETB as a placeholder price: change it in `src/content2.js` or in Admin). Lessons and exams are in `src/content2.js`; cover images are in `src/assets/courses/` (generated artwork, replace the files to use your own).
+- C++ tasks are checked for the key parts of the code (they are not compiled in the browser). Python tasks run real Python. The AI course has a "teach the line" error explorer and the CS course has a binary explorer.
+- `SEED_VERSION` in `src/data.js`: whenever you change the built-in courses in code, add 1 to this number. Returning visitors then get the new lessons and courses automatically, and keep their progress and unlocked courses.

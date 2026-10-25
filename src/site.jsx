@@ -107,7 +107,7 @@ function Features() {
   )
 }
 
-const ORDER = ['web', 'math', 'scratch', 'python', 'digital', 'exam']
+const ORDER = ['web', 'math', 'scratch', 'python', 'digital', 'exam', 'js', 'cpp', 'cs', 'ai', 'english']
 const rank = c => { const i = ORDER.indexOf(c.id); return i < 0 ? 99 : i }
 function CourseCarousel() {
   const db = useDB()

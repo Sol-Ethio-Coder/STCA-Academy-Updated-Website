@@ -11,11 +11,17 @@ import pythonImg from './assets/courses/python.webp'
 import scratchImg from './assets/courses/scratch.webp'
 import digitalImg from './assets/courses/digital.webp'
 import examImg from './assets/courses/exam.webp'
+import cppImg from './assets/courses/cpp.webp'
+import aiImg from './assets/courses/ai.webp'
+import csImg from './assets/courses/cs.webp'
+import englishImg from './assets/courses/english.webp'
 import { extras } from './content.js'
 export const PASS = 70
 export const PLATFORM = 'https://stca-platform.vercel.app'
 export const PORTFOLIO = 'https://sol-ethio-coder.netlify.app'
-export const IMG = { web: webImg, math: mathImg, python: pythonImg, scratch: scratchImg, digital: digitalImg, exam: examImg }
+export const IMG = { web: webImg, math: mathImg, python: pythonImg, scratch: scratchImg, digital: digitalImg, exam: examImg, cpp: cppImg, ai: aiImg, cs: csImg, english: englishImg }
+// Bump this number whenever you change the built-in courses in code. Visitors then receive the new lessons automatically (their progress is kept).
+export const SEED_VERSION = 4
 
 const L = (title, body, q, options, answer) => ({ title, body, q: { q, options, answer } })
 const mk = (o, lessons) => ({ published: true, price: 0, ...o, lessons: lessons.map((l, i) => ({ id: 'l' + (i + 1), ...l })) })
@@ -88,6 +94,18 @@ const base = [
     L('Variables in JavaScript', 'Use let to create a variable: let score = 10. Use const when the value never changes.', 'Which keyword creates a constant?', ['let', 'const', 'var x', 'set'], 1),
     L('Functions', 'A function is a reusable block of code: function hi() { return "Hello" }.', 'What does a function do?', ['Stores a number only', 'Runs reusable code', 'Styles a page', 'Deletes a file'], 1),
   ]),
+  mk({ id: 'cpp', cat: 'Coding', level: 'Beginner', title: 'C++ Fundamentals', img: IMG.cpp, fallback: '', published: true,
+    blurb: 'Variables, input, decisions, loops, functions and arrays in the language behind games and operating systems.',
+    learn: ['Program structure and cout / cin', 'Data types and operators', 'if / else decisions and loops', 'Functions, arrays and vectors', 'A grade-calculator project'] }, []),
+  mk({ id: 'cs', cat: 'Coding', level: 'Beginner', title: 'Computer Science Fundamentals', img: IMG.cs, fallback: '', published: true,
+    blurb: 'Binary, algorithms, hardware, data structures, networks and databases, with real Python practice.',
+    learn: ['Bits, bytes and binary', 'Algorithms and logic', 'Hardware and operating systems', 'Searching, sorting and data structures', 'Networks, databases and cyber security'] }, []),
+  mk({ id: 'ai', cat: 'Coding', level: 'Beginner', title: 'AI Fundamentals', img: IMG.ai, fallback: '', published: true,
+    blurb: 'How machines learn, how chatbots work, how to prompt well and how to use AI safely and fairly.',
+    learn: ['What AI, machine learning and deep learning are', 'Supervised, unsupervised and reinforcement learning', 'Neural networks and language models', 'Writing good prompts', 'Ethics, bias and safety'] }, []),
+  mk({ id: 'english', cat: 'School', level: 'All levels', title: 'English Grammar Fundamentals', img: IMG.english, fallback: '', published: true,
+    blurb: 'Parts of speech, sentences, tenses, agreement and punctuation, with practice after every lesson.',
+    learn: ['Parts of speech and sentence types', 'Nouns, articles and plurals', 'Present, past and future tenses', 'Subject-verb agreement and common mix-ups', 'Punctuation and proofreading'] }, []),
 ]
 
 export const seedCourses = base.map(c => ({ ...c, ...(extras[c.id] || {}) }))

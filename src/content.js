@@ -1,3 +1,4 @@
+import { cpp, ai, cs, english } from './content2.js'
 // Full course content. Lesson text supports: blank-line paragraphs, "- " bullets, "> " tips,
 // **bold**, ~inline code~ and ~~~ code blocks ~~~. Keep "${" out of the text.
 const mc = (q, options, answer) => ({ t: 'mcq', q, options, answer })
@@ -778,4 +779,4 @@ If you feel nervous, breathe slowly in for 4 seconds and out for 6. A little str
     mc('If a question is very hard you should…', ['Panic', 'Skip it and return later', 'Leave the exam', 'Guess forever'], 1)],
 }
 
-export const extras = { web, js, python, math, scratch, digital, exam }
+export const extras = { web, js, python, math, scratch, digital, exam, cpp, ai, cs, english }
