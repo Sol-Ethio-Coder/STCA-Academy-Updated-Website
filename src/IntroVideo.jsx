@@ -30,7 +30,7 @@ export default function IntroVideo() {
     setTilt({ x: ((e.clientX - r.left) / r.width - 0.5) * 14, y: ((e.clientY - r.top) / r.height - 0.5) * -14 })
   }
   const points = [['bg-leaf', '1:1 lessons with real tutors'], ['bg-gold', 'Hands-on projects, not only theory'], ['bg-rose', 'Online or in person in Addis Ababa']]
-  const chip = 'glass float absolute hidden rounded-full border border-hair px-4 py-2 text-sm font-bold text-text shadow-lg sm:block'
+  const chip = 'float absolute z-30 hidden items-center gap-2 whitespace-nowrap rounded-full bg-white px-4 py-2.5 text-sm font-bold text-[#0b1226] shadow-[0_12px_30px_-8px_rgba(0,0,0,.65)] ring-1 ring-black/10 md:flex'
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-16" aria-label="Introduction video">
@@ -52,9 +52,6 @@ export default function IntroVideo() {
 
           <div ref={box} className="relative mx-auto w-[min(19rem,76vw)]" style={{ perspective: '1000px' }} onMouseMove={move} onMouseLeave={() => setTilt({ x: 0, y: 0 })}>
             <div className="halo" aria-hidden="true" />
-            <span className={`${chip} -left-10 top-20`} style={{ animationDelay: '0s' }} aria-hidden="true">▶ 30 sec</span>
-            <span className={`${chip} -right-10 top-1/2`} style={{ animationDelay: '1.2s' }} aria-hidden="true">🎓 1:1 tutors</span>
-            <span className={`${chip} -left-8 bottom-16`} style={{ animationDelay: '2.4s' }} aria-hidden="true">📍 Addis Ababa</span>
             <div className="relative rounded-[2.6rem] border-[10px] border-[#0b1226] bg-black shadow-2xl ring-1 ring-white/20 transition-transform duration-200 ease-out" style={{ transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)` }}>
               <span className="absolute left-1/2 top-2 z-20 h-5 w-20 -translate-x-1/2 rounded-full bg-black" aria-hidden="true" />
               <div className="relative aspect-[9/16] overflow-hidden rounded-[1.9rem] bg-[#0b1226]">
@@ -77,6 +74,9 @@ export default function IntroVideo() {
                 )}
               </div>
             </div>
+            <span className={`${chip} -left-24 top-24`} style={{ animationDelay: '0s' }} aria-hidden="true"><span className="text-base">▶</span> 30 seconds</span>
+            <span className={`${chip} -right-24 top-1/2`} style={{ animationDelay: '1.2s' }} aria-hidden="true"><span className="text-base">🎓</span> 1:1 tutors</span>
+            <span className={`${chip} -left-20 bottom-28`} style={{ animationDelay: '2.4s' }} aria-hidden="true"><span className="text-base">📍</span> Addis Ababa</span>
           </div>
         </div>
       </div>
