@@ -1,10 +1,11 @@
-import { useState, useRef, useMemo } from 'react'
+import { useState, useRef, useMemo, useEffect } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useDB } from './store.js'
 import { NotFound } from './pages.jsx'
 import { submitRequest } from './codes.js'
 import { P, G, Icon, Logo, CourseImg, CourseCard, CountUp, DEFAULT_TAG, slugOf, useTag, usePage } from './ui.jsx'
-import { reviews, pricing, contactFaqs, TELEGRAM, YOUTUBE, EMAIL, PHONE, PHONE_TEL, FORM, PLATFORM, PORTFOLIO } from './data.js'
+import IntroVideo from './IntroVideo.jsx'
+import { reviews, pricing, contactFaqs, TELEGRAM, YOUTUBE, EMAIL, PHONE, PHONE_TEL, FORM, PLATFORM, PORTFOLIO, YT_ID, YT_URL } from './data.js'
 
 const Wrap = ({ children, className = '' }) => <div className={`mx-auto max-w-6xl px-5 ${className}`}>{children}</div>
 const Head = ({ eyebrow, title, sub, center }) => (
@@ -212,6 +213,68 @@ function Testimonials() {
   )
 }
 
+const THUMBS = ['maxresdefault', 'hqdefault']
+function VideoSpot() {
+  const [playing, setPlaying] = useState(false)
+  const [thumb, setThumb] = useState(0)
+  const [tilt, setTilt] = useState({ x: 0, y: 0 })
+  const box = useRef(null)
+  const frame = useRef(null)
+  // Trick: the video file is only requested after a tap (fast page, no tracking before consent),
+  // and it pauses by itself when you scroll it out of view.
+  useEffect(() => {
+    if (!playing || !box.current) return
+    const io = new IntersectionObserver(([e]) => { if (!e.isIntersecting) frame.current?.contentWindow?.postMessage(JSON.stringify({ event: 'command', func: 'pauseVideo', args: '' }), '*') }, { threshold: 0.2 })
+    io.observe(box.current)
+    return () => io.disconnect()
+  }, [playing])
+  const src = `https://www.youtube-nocookie.com/embed/${YT_ID}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(typeof location !== 'undefined' ? location.origin : '')}`
+  const move = e => { const r = e.currentTarget.getBoundingClientRect(); setTilt({ x: ((e.clientX - r.left) / r.width - 0.5) * 14, y: ((e.clientY - r.top) / r.height - 0.5) * -14 }) }
+  const chips = [['▶ Watch here', 'sm:-left-14 top-10', '0s'], ['🔊 Sound on', 'sm:-right-12 top-1/3', '1.2s'], ['🎓 Learn with STCA', 'sm:-left-10 bottom-16', '2.4s']]
+  return (
+    <section className="relative overflow-hidden py-20" aria-labelledby="video-title">
+      <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full blur-3xl" style={{ background: 'var(--g1)', opacity: 0.12 }} aria-hidden="true" />
+      <div className="pointer-events-none absolute -right-24 bottom-0 h-80 w-80 rounded-full blur-3xl" style={{ background: 'var(--g3)', opacity: 0.12 }} aria-hidden="true" />
+      <Wrap className="relative grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="reveal">
+          <p className="eyebrow">Watch</p>
+          <h2 id="video-title" className="mt-3 text-4xl leading-tight md:text-5xl">See <span className="grad-text">STCA</span> in a short video</h2>
+          <p className="mt-4 max-w-xl text-lg text-muted">Press play right here on the page. When you are ready to learn with us, book a free call.</p>
+          <ul className="mt-6 space-y-3">{['Tap the phone to play with sound', 'It plays on this page, so you do not have to leave', 'It pauses by itself when you scroll away'].map(t => <li key={t} className="flex items-center gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-leaf/15 text-leaf"><Icon n="check" className="h-4 w-4" /></span>{t}</li>)}</ul>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a className={P} href={YT_URL} target="_blank" rel="noopener"><Icon n="yt" className="h-5 w-5" /> Watch on YouTube</a>
+            <a className={G} href={YOUTUBE} target="_blank" rel="noopener">Subscribe to our channel</a>
+            <Link className={G} to="/html/contact">Book a Free Call</Link>
+          </div>
+        </div>
+        <div className="reveal"><div className="relative mx-auto w-[min(17rem,76vw)] lg:mr-6" style={{ perspective: '1100px' }} ref={box} onMouseMove={move} onMouseLeave={() => setTilt({ x: 0, y: 0 })}>
+          <div className="video-ring video-glow absolute -inset-3 rounded-[3rem]" aria-hidden="true" />
+          <div className="video-ring relative rounded-[2.9rem] p-[3px] shadow-2xl transition-transform duration-200 ease-out" style={{ transform: `rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)` }}>
+            <div className="relative rounded-[2.75rem] bg-[#0b1226] p-2.5">
+              <div className="relative aspect-[9/16] overflow-hidden rounded-[2.2rem] bg-black">
+                {playing ? (
+                  <iframe ref={frame} src={src} title="STCA video" className="absolute inset-0 h-full w-full" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
+                ) : (
+                  <button type="button" onClick={() => setPlaying(true)} aria-label="Play the STCA video" className="group absolute inset-0 flex items-center justify-center overflow-hidden text-white">
+                    {thumb < THUMBS.length
+                      ? <img src={`https://i.ytimg.com/vi/${YT_ID}/${THUMBS[thumb]}.jpg`} alt="" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" onError={() => setThumb(t => t + 1)} />
+                      : <span className="absolute inset-0" style={{ background: 'linear-gradient(160deg,#0b1226,#1d4ed8 60%,#06b6d4)' }} />}
+                    <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/30" style={{ background: 'linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,.05) 55%, rgba(0,0,0,.35))' }} />
+                    <span className="play-btn relative flex h-20 w-20 items-center justify-center rounded-full bg-white text-[#0b1226] shadow-2xl transition-transform duration-300 group-hover:scale-110"><svg viewBox="0 0 24 24" className="ml-1 h-9 w-9" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg></span>
+                    <span className="absolute bottom-6 left-0 right-0 text-center text-sm font-semibold drop-shadow">Tap to play with sound</span>
+                  </button>
+                )}
+                <span className="pointer-events-none absolute left-1/2 top-2 z-10 h-5 w-20 -translate-x-1/2 rounded-full bg-black" aria-hidden="true" />
+              </div>
+            </div>
+          </div>
+          {chips.map(([t, pos, dl]) => <span key={t} className={`glass float absolute hidden whitespace-nowrap rounded-full border border-hair px-4 py-2 text-sm font-bold shadow-lg sm:block ${pos}`} style={{ animationDelay: dl }} aria-hidden="true">{t}</span>)}
+        </div></div>
+      </Wrap>
+    </section>
+  )
+}
+
 function CtaBand() {
   return (
     <Wrap className="py-8"><div className="rounded-[2rem] bg-soft p-10 text-center md:p-16">
@@ -224,7 +287,7 @@ function CtaBand() {
 
 export function Home() {
   usePage('Empowering Young Minds | STCA', '1:1 tutoring in Addis Ababa for Python, Web Development, Scratch, Math and Exam Prep. Personalized coding and academic tutoring for all ages.')
-  return <><Hero /><Features /><CourseCarousel /><How /><LearnBanner /><Testimonials /><CtaBand /></>
+  return <><Hero /><Features /><IntroVideo /><CourseCarousel /><How /><VideoSpot /><LearnBanner /><Testimonials /><CtaBand /></>
 }
 
 export function CoursesPage() {

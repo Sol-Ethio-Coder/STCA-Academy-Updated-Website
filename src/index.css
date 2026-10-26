@@ -105,3 +105,20 @@ article img, .card img { transition: transform .7s cubic-bezier(.2,.7,.2,1), fil
 .card:hover img { filter: saturate(1.15); }
 
 .marquee-track.rev { animation-direction: reverse; }
+
+/* ---- video showcase ---- */
+@property --a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.video-ring { background: conic-gradient(from var(--a), #4ade80, #fbbf24, #fb7185, #4ade80); animation: ring 7s linear infinite; }
+.video-glow { filter: blur(26px); opacity: .5; }
+@keyframes ring { to { --a: 360deg; } }
+.play-btn::before, .play-btn::after { content: ""; position: absolute; inset: 0; border-radius: 9999px; border: 2px solid rgba(255,255,255,.75); animation: ping 2.2s cubic-bezier(0,0,.2,1) infinite; }
+.play-btn::after { animation-delay: 1.1s; }
+@keyframes ping { 75%, 100% { transform: scale(1.9); opacity: 0; } }
+
+/* ---- intro video ---- */
+.halo { position: absolute; inset: -14px; border-radius: 3.2rem; background: conic-gradient(from 0deg, #4ade80, #fbbf24, #fb7185, #4ade80); filter: blur(24px); opacity: .5; animation: spin 9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.kenburns { animation: kb 14s ease-in-out infinite alternate; }
+@keyframes kb { from { transform: scale(1); } to { transform: scale(1.14); } }
+.play-ring { position: absolute; inset: 0; border-radius: 999px; border: 2px solid rgba(255,255,255,.75); animation: ring 2.2s ease-out infinite; }
+@keyframes ring { from { transform: scale(1); opacity: .85; } to { transform: scale(2.2); opacity: 0; } }

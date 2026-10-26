@@ -19,6 +19,10 @@ import { extras } from './content.js'
 export const PASS = 70
 export const PLATFORM = 'https://stca-platform.vercel.app'
 export const PORTFOLIO = 'https://sol-ethio-coder.netlify.app'
+export const INTRO_VIDEO_ID = '3T-8ZHX7Tas'
+export const INTRO_VIDEO_URL = 'https://www.youtube.com/shorts/3T-8ZHX7Tas'
+export const YT_ID = '3T-8ZHX7Tas'   // the YouTube Short shown on the home page (just the part after /shorts/)
+export const YT_URL = `https://www.youtube.com/shorts/${YT_ID}`
 export const IMG = { web: webImg, math: mathImg, python: pythonImg, scratch: scratchImg, digital: digitalImg, exam: examImg, cpp: cppImg, ai: aiImg, cs: csImg, english: englishImg }
 // Bump this number whenever you change the built-in courses in code. Visitors then receive the new lessons automatically (their progress is kept).
 export const SEED_VERSION = 4
