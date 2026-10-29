@@ -15,6 +15,13 @@ import cppImg from './assets/courses/cpp.webp'
 import aiImg from './assets/courses/ai.webp'
 import csImg from './assets/courses/cs.webp'
 import englishImg from './assets/courses/english.webp'
+import progfundImg from './assets/courses/progfund.webp'
+import computingImg from './assets/courses/computing.webp'
+import timeImg from './assets/courses/time.webp'
+import y10Img from './assets/courses/y10.webp'
+import y11Img from './assets/courses/y11.webp'
+import y12Img from './assets/courses/y12.webp'
+import fluencyImg from './assets/courses/fluency.webp'
 import { extras } from './content.js'
 export const PASS = 70
 export const PLATFORM = 'https://stca-platform.vercel.app'
@@ -23,9 +30,9 @@ export const INTRO_VIDEO_ID = '3T-8ZHX7Tas'
 export const INTRO_VIDEO_URL = 'https://www.youtube.com/shorts/3T-8ZHX7Tas'
 export const YT_ID = '3T-8ZHX7Tas'   // the YouTube Short shown on the home page (just the part after /shorts/)
 export const YT_URL = `https://www.youtube.com/shorts/${YT_ID}`
-export const IMG = { web: webImg, math: mathImg, python: pythonImg, scratch: scratchImg, digital: digitalImg, exam: examImg, cpp: cppImg, ai: aiImg, cs: csImg, english: englishImg }
+export const IMG = { web: webImg, math: mathImg, python: pythonImg, scratch: scratchImg, digital: digitalImg, exam: examImg, cpp: cppImg, ai: aiImg, cs: csImg, english: englishImg, progfund: progfundImg, computing: computingImg, time: timeImg, y10: y10Img, y11: y11Img, y12: y12Img, fluency: fluencyImg }
 // Bump this number whenever you change the built-in courses in code. Visitors then receive the new lessons automatically (their progress is kept).
-export const SEED_VERSION = 4
+export const SEED_VERSION = 5
 
 const L = (title, body, q, options, answer) => ({ title, body, q: { q, options, answer } })
 const mk = (o, lessons) => ({ published: true, price: 0, ...o, lessons: lessons.map((l, i) => ({ id: 'l' + (i + 1), ...l })) })
@@ -110,6 +117,27 @@ const base = [
   mk({ id: 'english', cat: 'School', level: 'All levels', title: 'English Grammar Fundamentals', img: IMG.english, fallback: '', published: true,
     blurb: 'Parts of speech, sentences, tenses, agreement and punctuation, with practice after every lesson.',
     learn: ['Parts of speech and sentence types', 'Nouns, articles and plurals', 'Present, past and future tenses', 'Subject-verb agreement and common mix-ups', 'Punctuation and proofreading'] }, []),
+  mk({ id: 'progfund', cat: 'Coding', level: 'Beginner', title: 'Programming Fundamentals', img: IMG.progfund, fallback: '', published: true,
+    blurb: 'Free: variables, decisions, loops, lists, functions and debugging, with real Python practice and a capstone.',
+    learn: ['Sequence, selection and iteration', 'Variables, data types and operators', 'Strings, lists and functions', 'Debugging and problem solving', 'A shopping-total capstone'] }, []),
+  mk({ id: 'computing', cat: 'School', level: 'Beginner', title: 'Computing', img: IMG.computing, fallback: '', published: true,
+    blurb: 'Free: how computers work, computational thinking, binary, networks, staying safe online and careers in computing.',
+    learn: ['Input, process, storage and output', 'Computational thinking', 'Binary and data', 'Networks and the internet', 'Online safety and computing careers'] }, []),
+  mk({ id: 'time', cat: 'School', level: 'All levels', title: 'Time Management & the Pomodoro Technique', img: IMG.time, fallback: '', published: true,
+    blurb: 'Free: priorities, SMART goals, the Pomodoro Technique with a working timer, beating procrastination and planning your week.',
+    learn: ['Eisenhower matrix and priorities', 'SMART goals', 'The Pomodoro Technique with a live timer', 'Beating procrastination', 'Your weekly plan'] }, []),
+  mk({ id: 'y10', cat: 'School', level: 'Year 10', title: 'Computing for Year 10', img: IMG.y10, fallback: '', published: true,
+    blurb: 'Algorithms, sorting, binary and hexadecimal, data representation, the CPU, networks, cyber security and ethics (GCSE / IGCSE style).',
+    learn: ['Algorithms, flowcharts and trace tables', 'Searching and sorting', 'Binary, hex and data representation', 'CPU, memory and storage', 'Networks, security and ethics'] }, []),
+  mk({ id: 'y11', cat: 'School', level: 'Year 11', title: 'Computing for Year 11', img: IMG.y11, fallback: '', published: true,
+    blurb: 'Boolean logic, validation, testing, files and arrays, translators, operating systems, SQL and exam technique (GCSE / IGCSE style).',
+    learn: ['Logic gates and truth tables', 'Defensive design and testing', 'Subroutines, arrays and files', 'Languages, OS and utilities', 'SQL and exam technique'] }, []),
+  mk({ id: 'y12', cat: 'School', level: 'Year 12', title: 'Computing for Year 12', img: IMG.y12, fallback: '', published: true,
+    blurb: 'Data structures, recursion, Big-O, object-oriented programming, processor architecture, two\'s complement and databases (AS / A-level style).',
+    learn: ['Stacks, queues, trees and graphs', 'Recursion and Big-O', 'Object-oriented programming', 'Architecture and assembly', 'Two\'s complement, databases and networks'] }, []),
+  mk({ id: 'fluency', cat: 'School', level: 'All levels', title: 'Digital Fluency', img: IMG.fluency, fallback: '', published: true,
+    blurb: 'Search smart, judge sources, use documents and spreadsheets, read data, collaborate, stay safe and use AI well.',
+    learn: ['Finding and judging information', 'Documents and spreadsheets', 'Data literacy', 'Collaboration, privacy and security', 'AI literacy and a digital portfolio'] }, []),
 ]
 
 export const seedCourses = base.map(c => ({ ...c, ...(extras[c.id] || {}) }))

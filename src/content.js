@@ -1,4 +1,7 @@
 import { cpp, ai, cs, english } from './content2.js'
+import { progfund, computing, time } from './content3.js'
+import { y10, y11, y12 } from './content4.js'
+import { fluency } from './content5.js'
 // Full course content. Lesson text supports: blank-line paragraphs, "- " bullets, "> " tips,
 // **bold**, ~inline code~ and ~~~ code blocks ~~~. Keep "${" out of the text.
 const mc = (q, options, answer) => ({ t: 'mcq', q, options, answer })
@@ -779,4 +782,4 @@ If you feel nervous, breathe slowly in for 4 seconds and out for 6. A little str
     mc('If a question is very hard you should…', ['Panic', 'Skip it and return later', 'Leave the exam', 'Guess forever'], 1)],
 }
 
-export const extras = { web, js, python, math, scratch, digital, exam, cpp, ai, cs, english }
+export const extras = { web, js, python, math, scratch, digital, exam, cpp, ai, cs, english, progfund, computing, time, y10, y11, y12, fluency }

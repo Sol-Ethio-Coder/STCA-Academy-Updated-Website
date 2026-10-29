@@ -122,17 +122,18 @@ export function Graph() {
   )
 }
 
-export function Binary() {
+export function Binary({ signed }) {
   const [bits, setBits] = useState([0, 0, 0, 0, 1, 0, 1, 0])
-  const val = bits.reduce((t, b, i) => t + b * 2 ** (7 - i), 0)
+  const wt = i => (signed && i === 0 ? -128 : 2 ** (7 - i))
+  const val = bits.reduce((t, b, i) => t + b * wt(i), 0)
   return (
-    <Frame label="Explore · binary numbers">
+    <Frame label={signed ? "Explore · two's complement (8 bits)" : 'Explore · binary numbers'}>
       <div className="flex flex-wrap justify-center gap-2">{bits.map((b, i) => (
-        <button key={i} aria-label={`Bit worth ${2 ** (7 - i)}`} aria-pressed={!!b} onClick={() => setBits(x => x.map((y, j) => (j === i ? 1 - y : y)))}
+        <button key={i} aria-label={`Bit worth ${wt(i)}`} aria-pressed={!!b} onClick={() => setBits(x => x.map((y, j) => (j === i ? 1 - y : y)))}
           className={`flex w-12 flex-col items-center rounded-xl border-2 px-1 py-2 font-mono transition-all hover:-translate-y-0.5 ${b ? 'border-accent bg-accent/15' : 'border-hair-strong bg-surface'}`}>
-          <span className="text-xs text-muted">{2 ** (7 - i)}</span><span className="text-2xl font-bold">{b}</span></button>))}</div>
+          <span className="text-xs text-muted">{wt(i)}</span><span className="text-2xl font-bold">{b}</span></button>))}</div>
       <p className="mt-4 text-center font-display text-3xl">{bits.join('')} = <span className="grad-text">{val}</span></p>
-      <p className="mt-1 text-center text-sm text-muted">Tap the bits, then add the place values of the 1s.{val >= 33 && val <= 126 ? ` In the ASCII text code, ${val} is the character "${String.fromCharCode(val)}".` : ''}</p>
+      <p className="mt-1 text-center text-sm text-muted">{signed ? 'The leftmost bit is worth −128. Tap bits and add the place values of the 1s.' : 'Tap the bits, then add the place values of the 1s.'}{!signed && val >= 33 && val <= 126 ? ` In the ASCII text code, ${val} is the character "${String.fromCharCode(val)}".` : ''}</p>
     </Frame>
   )
 }
@@ -163,12 +164,87 @@ export function Fit() {
   )
 }
 
+const POMO = { classic: [1500, 300, 900, 'Classic 25 / 5'], short: [900, 180, 600, 'Short 15 / 3'], demo: [10, 5, 8, 'Demo 10 s / 5 s'] }
+export function Pomodoro() {
+  const [mode, setMode] = useState('classic')
+  const [phase, setPhase] = useState('work')
+  const [left, setLeft] = useState(POMO.classic[0])
+  const [run, setRun] = useState(false)
+  const [done, setDone] = useState(0)
+  const idx = phase === 'work' ? 0 : phase === 'break' ? 1 : 2
+  const total = POMO[mode][idx]
+  useEffect(() => { if (!run) return; const t = setInterval(() => setLeft(l => l - 1), 1000); return () => clearInterval(t) }, [run])
+  useEffect(() => {
+    if (left > 0) return
+    if (phase === 'work') { const n = done + 1; const next = n % 4 === 0 ? 'long' : 'break'; setDone(n); setPhase(next); setLeft(POMO[mode][next === 'long' ? 2 : 1]) }
+    else { setPhase('work'); setLeft(POMO[mode][0]) }
+  }, [left])
+  const pick = m => { setMode(m); setPhase('work'); setLeft(POMO[m][0]); setRun(false) }
+  const reset = () => { setRun(false); setPhase('work'); setLeft(POMO[mode][0]); setDone(0) }
+  const R = 54, C = 2 * Math.PI * R
+  const mm = String(Math.floor(left / 60)).padStart(2, '0'), ss = String(left % 60).padStart(2, '0')
+  const label = phase === 'work' ? 'Focus' : phase === 'break' ? 'Short break' : 'Long break'
+  const col = phase === 'work' ? 'var(--g3)' : 'var(--g1)'
+  return (
+    <Frame label="Explore · Pomodoro timer">
+      <div className="grid items-center gap-6 sm:grid-cols-[13rem_1fr]">
+        <div className="relative mx-auto h-48 w-48">
+          <svg viewBox="0 0 130 130" className="h-full w-full -rotate-90" aria-hidden="true">
+            <circle cx="65" cy="65" r={R} fill="none" stroke="var(--hair-strong)" strokeWidth="9" />
+            <circle cx="65" cy="65" r={R} fill="none" stroke={col} strokeWidth="9" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C * (1 - (total - left) / total)} style={{ transition: 'stroke-dashoffset 1s linear' }} />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="font-display text-5xl font-semibold tabular-nums" role="timer" aria-live="off">{mm}:{ss}</span>
+            <span className="text-sm font-semibold" style={{ color: col }} aria-live="polite">{label}</span>
+          </div>
+        </div>
+        <div className="space-y-4">
+          <div className="flex flex-wrap gap-2">{Object.entries(POMO).map(([k, v]) => <button key={k} onClick={() => pick(k)} aria-pressed={mode === k} className={`rounded-full border px-3 py-1.5 text-sm font-semibold ${mode === k ? 'border-transparent bg-brand text-onbrand' : 'border-hair-strong hover:border-accent'}`}>{v[3]}</button>)}</div>
+          <div className="flex flex-wrap items-center gap-3">
+            <button className="btn btn-primary btn-sm" onClick={() => setRun(r => !r)}>{run ? 'Pause' : left === total && done === 0 ? 'Start' : 'Resume'}</button>
+            <button className="btn btn-ghost btn-sm" onClick={reset}>Reset</button>
+          </div>
+          <p className="text-sm">Pomodoros completed: <b className="font-display text-xl">{done}</b> <span aria-hidden="true">{'🍅'.repeat(Math.min(done, 8))}</span></p>
+          <p className="text-sm text-muted">After every 4th pomodoro you get a long break. Try the Demo speed to see a whole cycle in seconds.</p>
+        </div>
+      </div>
+    </Frame>
+  )
+}
+
+const GATES = { AND: (a, b) => a & b, OR: (a, b) => a | b, XOR: (a, b) => a ^ b, NAND: (a, b) => 1 - (a & b), NOR: (a, b) => 1 - (a | b), NOT: a => 1 - a }
+export function Gates() {
+  const [g, setG] = useState('AND')
+  const [a, setA] = useState(0)
+  const [b, setB] = useState(0)
+  const one = g === 'NOT'
+  const out = one ? GATES.NOT(a) : GATES[g](a, b)
+  const rows = one ? [[0], [1]] : [[0, 0], [0, 1], [1, 0], [1, 1]]
+  const tog = (v, set, name) => <button onClick={() => set(1 - v)} aria-pressed={!!v} aria-label={`Input ${name}`} className={`h-14 w-14 rounded-xl border-2 font-mono text-2xl font-bold transition-all hover:-translate-y-0.5 ${v ? 'border-accent bg-accent/15' : 'border-hair-strong bg-surface'}`}>{v}</button>
+  return (
+    <Frame label="Explore · logic gates">
+      <div className="flex flex-wrap gap-2">{Object.keys(GATES).map(k => <button key={k} onClick={() => setG(k)} aria-pressed={g === k} className={`rounded-full border px-4 py-1.5 text-sm font-bold ${g === k ? 'border-transparent bg-brand text-onbrand' : 'border-hair-strong hover:border-accent'}`}>{k}</button>)}</div>
+      <div className="mt-5 grid items-center gap-6 sm:grid-cols-[1fr_auto]">
+        <div className="flex items-center justify-center gap-4">
+          <div className="flex flex-col items-center gap-2"><span className="text-xs font-bold text-muted">A</span>{tog(a, setA, 'A')}{!one && <><span className="text-xs font-bold text-muted">B</span>{tog(b, setB, 'B')}</>}</div>
+          <div className="rounded-xl border-2 border-hair-strong bg-surface px-5 py-6 font-display text-2xl font-bold">{g}</div>
+          <div className={`flex h-16 w-16 items-center justify-center rounded-full border-4 font-mono text-2xl font-bold transition-colors ${out ? 'border-leaf bg-leaf/20 text-leaf' : 'border-hair-strong text-muted'}`} role="status" aria-label={`Output ${out}`}>{out}</div>
+        </div>
+        <table className="mx-auto text-center text-sm"><thead><tr>{(one ? ['A'] : ['A', 'B']).map(h => <th key={h} className="px-3 py-1">{h}</th>)}<th className="px-3 py-1">Out</th></tr></thead>
+          <tbody>{rows.map(r => { const o = one ? GATES.NOT(r[0]) : GATES[g](r[0], r[1]); const cur = one ? r[0] === a : r[0] === a && r[1] === b; return <tr key={r.join('')} className={cur ? 'bg-accent/15 font-bold' : ''}>{r.map((v, i) => <td key={i} className="px-3 py-1 font-mono">{v}</td>)}<td className="px-3 py-1 font-mono">{o}</td></tr> })}</tbody></table>
+      </div>
+    </Frame>
+  )
+}
+
 export function Explore({ a }) {
   if (a.t === 'play') return <Play html={a.html} />
   if (a.t === 'stage') return <Stage />
   if (a.t === 'graph') return <Graph />
   if (a.t === 'fit') return <Fit />
-  if (a.t === 'binary') return <Binary />
+  if (a.t === 'binary') return <Binary signed={a.signed} />
+  if (a.t === 'pomodoro') return <Pomodoro />
+  if (a.t === 'gates') return <Gates />
   return null
 }
 

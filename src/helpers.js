@@ -1,0 +1,11 @@
+// Shared builders for course content files (content3.js, content4.js, content5.js).
+export const mc = (q, options, answer) => ({ t: 'mcq', q, options, answer })
+export const tf = (q, answer) => ({ t: 'tf', q, answer })
+export const fl = (q, answer, ...alt) => ({ t: 'fill', q, answer, alt })
+export const od = (q, items) => ({ t: 'order', q, items })
+export const mt = (q, ...pairs) => ({ t: 'match', q, pairs })
+export const ck = (q, items, link) => ({ t: 'checklist', q, items, link })
+export const pyt = (q, starter, expect, hint, solution, checks = []) => ({ t: 'pytask', q, starter, expect, hint, solution, checks })
+export const L = (title, body, acts) => ({ title, body, acts })
+export const M = (module, ...ls) => ls.map(l => ({ ...l, module }))
+export const ids = ls => ls.flat().map((l, i) => ({ id: 'l' + (i + 1), ...l }))

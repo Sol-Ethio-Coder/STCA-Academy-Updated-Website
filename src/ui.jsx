@@ -29,7 +29,7 @@ export const Logo = ({ size = 40 }) => (
   </span>
 )
 // Shows your original photo. If the file is missing, a colorful built-in cover is shown instead (never a broken image).
-const ART = { web: ['#7c3aed', '#2b59ff', '</>'], math: ['#059669', '#14b8a6', '∑'], python: ['#1d4ed8', '#0ea5e9', 'py'], scratch: ['#f97316', '#facc15', '{ }'], digital: ['#0f766e', '#22c55e', 'www'], exam: ['#be123c', '#f97316', 'A+'], js: ['#ca8a04', '#f59e0b', 'JS'], cpp: ['#1e3a8a', '#2563eb', 'C++'], ai: ['#7c3aed', '#06b6d4', 'AI'], cs: ['#0f766e', '#1d4ed8', '01'], english: ['#e11d48', '#f59e0b', 'Aa'] }
+const ART = { web: ['#7c3aed', '#2b59ff', '</>'], math: ['#059669', '#14b8a6', '∑'], python: ['#1d4ed8', '#0ea5e9', 'py'], scratch: ['#f97316', '#facc15', '{ }'], digital: ['#0f766e', '#22c55e', 'www'], exam: ['#be123c', '#f97316', 'A+'], js: ['#ca8a04', '#f59e0b', 'JS'], cpp: ['#1e3a8a', '#2563eb', 'C++'], ai: ['#7c3aed', '#06b6d4', 'AI'], cs: ['#0f766e', '#1d4ed8', '01'], english: ['#e11d48', '#f59e0b', 'Aa'], progfund: ['#4338ca', '#db2777', '{ }'], computing: ['#0f766e', '#4f46e5', '</>'], time: ['#b91c1c', '#f97316', '25:00'], y10: ['#1d4ed8', '#22d3ee', '10'], y11: ['#6d28d9', '#e879f9', '11'], y12: ['#047857', '#5eead4', '12'], fluency: ['#6d28d9', '#06b6d4', 'DF'] }
 export function CourseImg({ c, src, className }) {
   const [bad, setBad] = useState(false)
   const a = ART[c.id] || ['#334155', '#6366f1', '★']

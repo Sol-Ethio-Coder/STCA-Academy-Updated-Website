@@ -80,3 +80,13 @@ The chat is called **STCA AI Tutor**. The server prompt (`netlify/functions/ai.m
 C++ Fundamentals, Computer Science Fundamentals, AI Fundamentals and English Grammar Fundamentals (each 300 ETB as a placeholder price: change it in `src/content2.js` or in Admin). Lessons and exams are in `src/content2.js`; cover images are in `src/assets/courses/` (generated artwork, replace the files to use your own).
 - C++ tasks are checked for the key parts of the code (they are not compiled in the browser). Python tasks run real Python. The AI course has a "teach the line" error explorer and the CS course has a binary explorer.
 - `SEED_VERSION` in `src/data.js`: whenever you change the built-in courses in code, add 1 to this number. Returning visitors then get the new lessons and courses automatically, and keep their progress and unlocked courses.
+
+## Home page video
+The YouTube Short on the home page is set by `YT_ID` in `src/data.js` (the part of the link after `/shorts/`). Change that one value to show a different video. It loads only after a tap, uses the privacy-friendly youtube-nocookie.com domain, and pauses by itself when scrolled out of view. The video's owner must allow embedding (YouTube Studio > video > Details > "Allow embedding").
+
+## More courses (v5)
+- Free: Programming Fundamentals, Computing, Time Management & the Pomodoro Technique (with a working timer).
+- Paid: Computing for Year 10 (400 ETB), Year 11 (400 ETB), Year 12 (500 ETB) and Digital Fluency (300 ETB). All prices are placeholders: change them in `src/content4.js`, `src/content5.js` or in Admin.
+- Year 10 to 12 follow typical GCSE / IGCSE and AS / A-level Computer Science topics. Exam boards differ, so check the topics against your students' own specification.
+- New files: `src/helpers.js` (shared builders), `src/content3.js`, `src/content4.js`, `src/content5.js`. New activities: Pomodoro timer, logic-gate explorer and an 8-bit two's complement explorer.
+- `SEED_VERSION` is now 5.
